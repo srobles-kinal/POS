@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Crear Cuenta — AutoParts GT</title>
+<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth.css"><script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div class="auth-pg"><div class="auth-box">
+<div class="auth-brand"><div class="a-logo">⚙</div><h1>Crear Cuenta</h1><p>Encuentra los repuestos que necesitas</p></div>
+<div class="auth-card">
+<div class="fg"><label class="fl">Nombre Completo</label><input type="text" id="r-name" class="fi" placeholder="Tu nombre"></div>
+<div class="fg"><label class="fl">Correo Electrónico</label><input type="email" id="r-email" class="fi" placeholder="tu@email.com"></div>
+<div class="fg"><label class="fl">Teléfono</label><input type="tel" id="r-tel" class="fi" placeholder="5555-1234"></div>
+<div class="fg"><label class="fl">Contraseña</label><input type="password" id="r-pass" class="fi" placeholder="Mínimo 6 caracteres"></div>
+<button class="btn btn-primary btn-lg" onclick="doReg()">Crear Cuenta</button>
+<div class="auth-divider">o regístrate con</div>
+<div class="g-btn-wrap"><div class="g_id_signin"></div></div>
+<div class="auth-foot">¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></div>
+</div></div></div>
+<script src="js/config.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script><script src="js/api.js"></script><script>window.addEventListener('load',function(){if(typeof google!=='undefined'&&CONFIG.GOOGLE_CLIENT_ID&&!CONFIG.GOOGLE_CLIENT_ID.includes('TU_')){google.accounts.id.initialize({client_id:CONFIG.GOOGLE_CLIENT_ID,callback:handleGoogleCredential});google.accounts.id.renderButton(document.querySelector('.g_id_signin'),{theme:'outline',size:'large',text:'continue_with',shape:'rectangular',width:360,locale:'es'})}})</script>
+<script>
+async function doReg(){var n=document.getElementById('r-name').value,e=document.getElementById('r-email').value,t=document.getElementById('r-tel').value,p=document.getElementById('r-pass').value;if(!n||!e||!p)return UI.toast('Completa los campos requeridos','warning');var r=await API.register(n,e,t,p);if(r&&r.success){UI.toast('Cuenta creada. Inicia sesión.','success');setTimeout(()=>window.location.href='login.html',1000)}else UI.toast(r?r.error:'Error','error')}
+</script></body></html>

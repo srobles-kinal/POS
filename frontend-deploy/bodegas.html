@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Bodegas — AutoParts GT</title>
+<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+
+</head>
+<body><header class="main-nav" id="main-nav"></header><main class="page"><div class="pg-head"><div><h1>🏭 Bodegas</h1></div><button class="btn btn-primary" onclick="sf()">+ Nueva Bodega</button></div><div class="g-cards" id="g"></div></main><script src="js/config.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script><script src="js/api.js"></script><script>
+if(!Auth.requireAdmin())throw'r';UI.renderNav();let its=[];async function ld(){var r=await API.getBodegas();if(r&&r.success){its=r.data;var g=document.getElementById('g');if(!its.length){g.innerHTML=UI.empty('🏭','Sin bodegas','Crea tu primera bodega');return}g.innerHTML=its.map(b=>'<div class="card"><div class="card-head"><h3>'+b.nombre+'</h3>'+UI.badge(b.estado)+'</div><p style="font-size:.85rem;margin-bottom:.3rem">'+(b.descripcion||'Sin descripción')+'</p><p style="font-size:.78rem;color:var(--text-3)">📍 '+(b.ubicacion||'—')+'</p><div style="display:flex;gap:.3rem;margin-top:.8rem"><button class="btn btn-outline btn-sm" onclick="sf(\''+b.id+'\')">Editar</button><button class="btn btn-danger btn-sm" onclick="del(\''+b.id+'\')">Desactivar</button></div></div>').join('')}}
+function sf(id){var b=id?its.find(x=>x.id===id):null;UI.showModal(b?'Editar':'Nueva Bodega','<div class="fg"><label class="fl">Nombre</label><input class="fi" id="fn" value="'+(b?b.nombre:'')+'"></div><div class="fr"><div class="fg"><label class="fl">Ubicación</label><input class="fi" id="fu" value="'+(b?b.ubicacion:'')+'"></div><div class="fg"><label class="fl">Capacidad</label><input type="number" class="fi" id="fc" value="'+(b?b.capacidad:'')+'"></div></div><div class="fg"><label class="fl">Descripción</label><textarea class="ft" id="fd">'+(b?b.descripcion:'')+'</textarea></div>',{footer:'<button class="btn btn-outline" onclick="UI.closeModal()">Cancelar</button><button class="btn btn-primary" onclick="sv(\''+( id||'')+'\')">Guardar</button>'})}
+async function sv(id){var d={nombre:document.getElementById('fn').value,ubicacion:document.getElementById('fu').value,capacidad:document.getElementById('fc').value,descripcion:document.getElementById('fd').value};if(!d.nombre)return UI.toast('Nombre requerido','warning');var r=id?await API.updateBodega(id,d):await API.createBodega(d);if(r&&r.success){UI.closeModal();UI.toast('Guardado','success');ld()}else UI.toast(r?r.error:'Error','error')}
+async function del(id){if(await UI.confirm('¿Desactivar?')){var r=await API.deleteBodega(id);if(r&&r.success){UI.toast('Desactivada','success');ld()}else UI.toast(r?r.error:'Error','error')}}ld();
+</script></body></html>

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pedidos — AutoParts GT</title>
+<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+
+</head>
+<body><header class="main-nav" id="main-nav"></header><main class="page"><div class="pg-head"><div><h1>📦 Gestión de Pedidos</h1></div></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Pedido</th><th>Cliente</th><th>Tel.</th><th>NIT</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acción</th></tr></thead><tbody id="tb"></tbody></table></div></main><script src="js/config.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script><script src="js/api.js"></script><script>
+if(!Auth.requireAdmin())throw'r';UI.renderNav();async function ld(){var r=await API.getOrdenes(true);if(!r||!r.success)return;document.getElementById('tb').innerHTML=r.data.length?r.data.map(o=>'<tr><td><code style="font-family:var(--font-m)">'+o.numero_orden+'</code></td><td>'+o.usuario_nombre+'</td><td>'+(o.telefono_contacto||'—')+'</td><td>'+(o.nit||'CF')+'</td><td style="font-weight:700;color:var(--brand)">'+UI.fc(o.total)+'</td><td>'+UI.badge(o.estado)+'</td><td style="font-size:.8rem">'+UI.fdt(o.fecha_creacion)+'</td><td><select class="fs" style="width:auto;padding:.25rem .5rem;font-size:.76rem" onchange="upd(\''+o.id+'\',this.value)"><option value="pendiente"'+(o.estado==='pendiente'?' selected':'')+'>Pendiente</option><option value="procesando"'+(o.estado==='procesando'?' selected':'')+'>Procesando</option><option value="enviado"'+(o.estado==='enviado'?' selected':'')+'>Enviado</option><option value="entregado"'+(o.estado==='entregado'?' selected':'')+'>Entregado</option><option value="cancelado"'+(o.estado==='cancelado'?' selected':'')+'>Cancelado</option></select></td></tr>').join(''):'<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-3)">Sin pedidos</td></tr>'}async function upd(id,e){var r=await API.updateOrdenEstado(id,e);if(r&&r.success)UI.toast('Actualizado','success')}ld();
+</script></body></html>

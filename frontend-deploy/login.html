@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Iniciar Sesión — AutoParts GT</title>
+<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/auth.css"><script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<div class="auth-pg"><div class="auth-box">
+<div class="auth-brand"><div class="a-logo">⚙</div><h1>AutoParts GT</h1><p>Repuestos Automotrices · Guatemala</p></div>
+<div class="auth-card">
+<div class="fg"><label class="fl">Correo Electrónico</label><input type="email" id="l-email" class="fi" placeholder="tu@email.com"></div>
+<div class="fg"><label class="fl">Contraseña</label><input type="password" id="l-pass" class="fi" placeholder="••••••••"></div>
+<button class="btn btn-primary btn-lg" onclick="doLogin()">Iniciar Sesión</button>
+<div class="auth-divider">o continúa con</div>
+<div class="g-btn-wrap"><div class="g_id_signin"></div></div>
+<div class="auth-foot">¿No tienes cuenta? <a href="register.html">Regístrate gratis</a></div>
+</div></div></div>
+<script src="js/config.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script><script src="js/api.js"></script><script>window.addEventListener('load',function(){if(typeof google!=='undefined'&&CONFIG.GOOGLE_CLIENT_ID&&!CONFIG.GOOGLE_CLIENT_ID.includes('TU_')){google.accounts.id.initialize({client_id:CONFIG.GOOGLE_CLIENT_ID,callback:handleGoogleCredential});google.accounts.id.renderButton(document.querySelector('.g_id_signin'),{theme:'outline',size:'large',text:'continue_with',shape:'rectangular',width:360,locale:'es'})}})</script>
+<script>
+if(Auth.isLoggedIn())window.location.href=Auth.isAdmin()?'dashboard.html':'tienda.html';
+async function doLogin(){var e=document.getElementById('l-email').value,p=document.getElementById('l-pass').value;if(!e||!p)return UI.toast('Completa todos los campos','warning');var r=await API.login(e,p);if(r&&r.success){Auth.setSession(r.token,r.user);UI.toast('Bienvenido, '+r.user.nombre,'success');var rd=sessionStorage.getItem('ap_redirect');sessionStorage.removeItem('ap_redirect');setTimeout(()=>window.location.href=rd||(r.user.rol==='admin'?'dashboard.html':'tienda.html'),600)}else UI.toast(r?r.error:'Error','error')}
+document.querySelectorAll('.fi').forEach(i=>i.addEventListener('keypress',e=>{if(e.key==='Enter')doLogin()}));
+</script></body></html>

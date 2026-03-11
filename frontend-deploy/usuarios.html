@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Clientes — AutoParts GT</title>
+<link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/nav.css"><link rel="stylesheet" href="css/components.css">
+
+</head>
+<body><header class="main-nav" id="main-nav"></header><main class="page"><div class="pg-head"><div><h1>👥 Clientes</h1></div></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Usuario</th><th>Email</th><th>Tel.</th><th>Autenticación</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tb"></tbody></table></div></main><script src="js/config.js"></script><script src="js/auth.js"></script><script src="js/ui.js"></script><script src="js/api.js"></script><script>
+if(!Auth.requireAdmin())throw'r';UI.renderNav();async function ld(){var r=await API.getUsers();if(!r||!r.success)return;document.getElementById('tb').innerHTML=r.data.map(u=>'<tr><td style="display:flex;align-items:center;gap:.5rem">'+(u.avatar_url?'<img src="'+u.avatar_url+'" style="width:28px;height:28px;border-radius:50%;object-fit:cover">':'<div style="width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700">'+u.nombre.charAt(0)+'</div>')+'<strong>'+u.nombre+'</strong></td><td>'+u.email+'</td><td>'+(u.telefono||'—')+'</td><td><span class="badge '+(u.auth_provider==='google'?'bg-info':'bg-def')+'">'+(u.auth_provider||'email')+'</span></td><td><select class="fs" style="width:auto;padding:.25rem .5rem;font-size:.76rem" onchange="cr(\''+u.id+'\',this.value)"><option value="cliente"'+(u.rol==='cliente'?' selected':'')+'>Cliente</option><option value="admin"'+(u.rol==='admin'?' selected':'')+'>Admin</option></select></td><td>'+UI.badge(u.estado)+'</td><td><button class="btn btn-ghost btn-sm" onclick="tg(\''+u.id+'\')">'+( u.estado==='activo'?'Desactivar':'Activar')+'</button></td></tr>').join('')}async function cr(id,r){var x=await API.updateUserRole(id,r);if(x&&x.success)UI.toast('Actualizado','success')}async function tg(id){var r=await API.toggleUserStatus(id);if(r&&r.success){UI.toast('Actualizado','success');ld()}}ld();
+</script></body></html>
